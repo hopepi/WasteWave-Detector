@@ -2,23 +2,23 @@ from ultralytics import YOLO
 
 def main():
     # Modeli yükle
-    model = YOLO('yolov8n.pt')  # Alternatif olarak 'yolov8s.pt', 'yolov8m.pt' kullanabilirsiniz.
+    model = YOLO('yolov8n.pt')  # Alternatif olarak 'yolov8s.pt', 'yolov8m.pt n s m l xl tarzı gidiyor' kullanabilirsiniz.
 
     data_yaml_path = "C:\\Users\\umutk\\OneDrive\\Masaüstü\\CombinedData\\data.yaml"
     # Modeli eğit
     model.train(
-        data=data_yaml_path,   # YAML dosyasının yolu.
-        epochs=10,                  # Modelin eğitileceği epoch sayısı. Yüksek değer daha iyi öğrenme sağlar ama aşırı öğrenmeye (overfitting) yol açabilir.
-        batch=16,                   # Bir batch'teki görüntü sayısı. GPU belleği ile optimize edilmelidir.
+        data=data_yaml_path,        # YAML dosyasının yolu.
+        epochs=50,                  # Modelin eğitileceği epoch sayısı. Yüksek değer daha iyi öğrenme sağlar ama aşırı öğrenmeye (overfitting) yol açabilir.
+        batch=12,                   # Bir batch'teki görüntü sayısı. GPU belleği ile optimize edilmelidir.
         imgsz=640,                  # Görüntülerin boyutu (genişlik x yükseklik). Daha büyük boyut, daha iyi doğruluk sağlar ama daha fazla GPU belleği tüketir.
-        workers=4,                  # Veriyi işlemek için kullanılacak CPU çekirdeği sayısı. Yüksek sayılar veri yüklemesini hızlandırabilir.
-        optimizer="SGD",            # Optimizasyon algoritması. 'SGD' (Stochastic Gradient Descent) veya 'Adam' kullanılabilir.
-        lr0=0.01,                   # Başlangıç öğrenme oranı. Daha küçük değerler daha yavaş ama sağlam öğrenme sağlar.
-        lrf=0.2,                    # Öğrenme oranı sonuna kadar azalma faktörü. 0.2, öğrenme oranını 1/5 oranında azaltır.
+        workers=3,                  # Veriyi işlemek için kullanılacak CPU çekirdeği sayısı. Yüksek sayılar veri yüklemesini hızlandırabilir.
+        optimizer="Adam",           # Optimizasyon algoritması. 'SGD' (Stochastic Gradient Descent) veya 'Adam' kullanılabilir.
+        lr0=0.0005,                 # Başlangıç öğrenme oranı. Daha küçük değerler daha yavaş ama sağlam öğrenme sağlar.
+        lrf=0.1,                    # Öğrenme oranı sonuna kadar azalma faktörü. 0.2, öğrenme oranını 1/5 oranında azaltır.
         momentum=0.937,             # SGD optimizasyonu için momentum. Yüksek değerler daha kararlı eğitim sağlar.
         weight_decay=0.0005,        # Ağırlık zayıflama katsayısı. Aşırı öğrenmeyi önlemek için kullanılır.
         patience=10,                # Eğer doğrulama kaybı belirli bir süre boyunca iyileşmezse, erken durma mekanizmasını tetikler.
-        augment=True,               # Veri artırma (data augmentation). Çeşitli dönüşümlerle veri artırmayı etkinleştirir.
+        augment=False,              # Veri artırma (data augmentation). Çeşitli dönüşümlerle veri artırmayı etkinleştirir.
         val=True,                   # Doğrulama işlemini eğitim sırasında etkinleştirir.
         cache=False,                # Veriyi belleğe alarak yükleme hızını artırır.
         device=0,                   # Kullanılacak cihaz. '0' bir GPU kullanır; 'cpu' CPU kullanır.
