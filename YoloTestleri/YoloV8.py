@@ -6,13 +6,13 @@ import os
 
 def main():
     # Modeli yükle
-    model = YOLO('yolov8n.pt')  # Alternatif olarak 'yolov8s.pt', 'yolov8m.pt n s m l xl tarzı gidiyor' kullanabilirsiniz.
+    model = YOLO('yolov8s.pt')  # Alternatif olarak 'yolov8s.pt', 'yolov8m.pt n s m l xl tarzı gidiyor' kullanabilirsiniz.
 
     data_yaml_path = r"C:\Users\umutk\OneDrive\Masaüstü\Yeni veri seti2\SeaSight.v2i.yolov11\data.yaml"
     # Modeli eğit
     model.train(
         data=data_yaml_path,        # YAML dosyasının yolu.
-        task = 'detect',            # Tespit görevine odaklandığınızı belirtir
+        task = 'detect',            # Tespit görevine odaklandığınızı belirtir.
         epochs=30,                  # Modelin eğitileceği epoch sayısı. Yüksek değer daha iyi öğrenme sağlar ama aşırı öğrenmeye (overfitting) yol açabilir.
         batch=9,                    # Bir batch'teki görüntü sayısı. GPU belleği ile optimize edilmelidir.
         imgsz=640,                  # Görüntülerin boyutu (genişlik x yükseklik). Daha büyük boyut, daha iyi doğruluk sağlar ama daha fazla GPU belleği tüketir.

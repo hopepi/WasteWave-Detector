@@ -22,8 +22,37 @@ Waste = [35, 36, 38, 18, 54, 55, 46, 79]
                                         parts[0] = '2'
                                     else:
                                         continue
+                                    
+                                    
+                                    if label in plastic_Bottle:
+                                        parts[0] = '0'
+                                    elif label in plastic_Bag:
+                                        parts[0] = '1'
+                                    elif label in can:
+                                        parts[0] = '2'
+                                    elif label in net:
+                                        parts[0] = '4'
+                                    elif label in glass:
+                                        parts[0] = '5'
+                                    elif label in mask:
+                                        parts[0] = '6'
+                                    elif label in glove:
+                                        parts[0] = '7'
+                                    elif label in other:
+                                        parts[0] = '10'
+                                    else:
+                                        continue
 
 """
+
+plastic_Bottle = [1,10,11,13,15,43,45]
+plastic_Bag = [12,17,32,33,44]
+can = [0,3,8,40,48,49]
+net = [9,41]
+glass = [4,5,36,37]
+mask = [7,35,39]
+glove = [38]
+other = [23,27,42,50]
 
 def process_and_create_folders_with_content_edit(root_folder, output_base_folder):
 
@@ -64,8 +93,10 @@ def process_and_create_folders_with_content_edit(root_folder, output_base_folder
                                     except ValueError:
                                         print(f"Invalid label format in line: {line}")
                                         continue
-                                    if label == 0 or label == 1 or label == 2:
-                                        parts[0] = '3'
+                                    if label == 0:
+                                        parts[0] = '2'
+                                    else:
+                                        continue
 
 
                                     new_lines.append(' '.join(parts))
@@ -86,8 +117,8 @@ def process_and_create_folders_with_content_edit(root_folder, output_base_folder
                     print(f"Completed: {folder}\n{'=' * 40}")
 
 # Kullanım
-root_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Yeni klasör\Plastic detection.v2i.yolov11"  # Giriş klasörü
-output_base_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Yeni klasör\ProcessedGarbage\Plastic detection.v2i.yolov11"  # Çıkış klasörü
+root_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Veri setleri\Latas.v394i.yolov8"  # Giriş klasörü
+output_base_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Veri setleri\yeni_set8"  # Çıkış klasörü
 
 process_and_create_folders_with_content_edit(root_folder, output_base_folder)
 print("All folders processed!")
