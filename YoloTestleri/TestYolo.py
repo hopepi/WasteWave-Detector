@@ -2,7 +2,7 @@ from ultralytics import YOLO
 
 model = YOLO('runs/train/exp4/weights/best.pt')
 
-video_path = "TestVideos/test1.mp4"
+video_path = "TestVideos/test7.mp4"
 
 model.predict(
     source=video_path,  # Test edilecek video yolu
