@@ -4,10 +4,11 @@ import numpy as np
 import tempfile
 import os
 import math
-def save_pdf_report(reports, output_path="rapor.pdf", threshold=1):
+
+def save_pdf_report(reports, output_path="exampleReport.pdf", threshold=1):
     """
     Detaylı video analiz raporunu PDF formatında kaydeder.
-    Bu fonksiyon, her saniye için ısı haritası da ekler.
+    Bu fonksiyon, her saniye için çubuk grafikler de ekler.
 
     Args:
         reports (list): Her saniyedeki nesne tespit raporlarını içeren liste.
@@ -49,23 +50,25 @@ def save_pdf_report(reports, output_path="rapor.pdf", threshold=1):
             pdf.image(temp_graph_file.name, x=10, y=30, w=190)
             temp_graph_file_path = temp_graph_file.name
 
-        # Her nesnenin yoğunluğu için ayrı grafikler
-        for class_name in reports[0][1].keys():
-            # Sadece yoğunluk verisi boş değilse grafiği oluştur
-            if any(avg_counts.get(class_name, 0) >= threshold for _, avg_counts in reports):
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_graph_file:
-                    create_individual_graph(reports, temp_graph_file.name, class_name, threshold)
-                    pdf.add_page()
-                    pdf.cell(200, 10, txt=f"{class_name} Yoğunluk Grafiği", ln=True, align="C")
-                    pdf.image(temp_graph_file.name, x=10, y=30, w=190)
-                    temp_graph_file_path = temp_graph_file.name
-
-        # Her saniye için ısı haritası ekleme
+        # Her saniye için çubuk grafik ekleme
         for second, avg_counts in reports:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_graph_file:
-                create_heatmap(reports, temp_graph_file.name, second, threshold)
+                create_bar_plot(reports, temp_graph_file.name, second, threshold)
                 pdf.add_page()
-                pdf.cell(200, 10, txt=f"Saniye {second} Isı Haritası", ln=True, align="C")
+                pdf.cell(200, 10, txt=f"Saniye {second} Çubuk Grafiği", ln=True, align="C")
+                pdf.image(temp_graph_file.name, x=10, y=30, w=190)
+                temp_graph_file_path = temp_graph_file.name
+
+        # Her nesne sınıfı için yoğunluk grafiği ekleme
+        all_classes = set()
+        for _, avg_counts in reports:
+            all_classes.update(avg_counts.keys())
+
+        for class_name in all_classes:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_graph_file:
+                create_individual_graph(reports, temp_graph_file.name, class_name, threshold)
+                pdf.add_page()
+                pdf.cell(200, 10, txt=f"{class_name} Yoğunluk Grafiği", ln=True, align="C")
                 pdf.image(temp_graph_file.name, x=10, y=30, w=190)
                 temp_graph_file_path = temp_graph_file.name
 
@@ -109,6 +112,35 @@ def create_overall_graph(reports, output_path, threshold=1):
     plt.close()
 
 
+def create_bar_plot(reports, output_path, second, threshold=1):
+    """
+    Belirli bir saniye için çubuk grafik oluşturur ve kaydeder.
+
+    Args:
+        reports (list): Her saniyedeki nesne tespit raporlarını içeren liste.
+        output_path (str): Kaydedilecek grafik dosyasının yolu.
+        second (int): Çubuk grafiği oluşturulacak saniye.
+        threshold (float): Minimum yoğunluk değeri.
+    """
+    for s, avg_counts in reports:
+        if s == second:
+            class_names = list(avg_counts.keys())
+            counts = [math.ceil(v) if v >= threshold else 0 for v in avg_counts.values()]
+
+            plt.figure(figsize=(10, 6))
+            plt.bar(class_names, counts, color="skyblue")
+            plt.xlabel("Nesne Sınıfları")
+            plt.ylabel("Yoğunluk")
+            plt.title(f"Saniye {second} Nesne Yoğunluğu")
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+
+            # Görseli kaydet
+            plt.savefig(output_path)
+            plt.close()
+            break
+
+
 def create_individual_graph(reports, output_path, class_name, threshold=1):
     """
     Belirli bir nesne sınıfı için yoğunluk grafiği oluşturur ve kaydeder.
@@ -135,41 +167,3 @@ def create_individual_graph(reports, output_path, class_name, threshold=1):
     plt.grid()
     plt.savefig(output_path)
     plt.close()
-
-def create_heatmap(reports, output_path, second, threshold=1):
-    """
-    Her saniye için ısı haritası oluşturur ve kaydeder.
-
-    Args:
-        reports (list): Her saniyedeki nesne tespit raporlarını içeren liste.
-        output_path (str): Kaydedilecek grafik dosyasının yolu.
-        second (int): Isı haritası oluşturulacak saniye.
-        threshold (float): Minimum yoğunluk değeri.
-    """
-    # Saniyeye ait yoğunluk verilerini al
-    for s, avg_counts in reports:
-        if s == second:
-            # Her nesnenin yoğunluğunu kontrol et
-            grid_size = 10  # Isı haritasının grid boyutu (örnek: 10x10)
-            grid = np.zeros((grid_size, grid_size))  # Başlangıçta sıfırlarla dolu bir grid
-
-            # Her nesnenin koordinatları (örnek: (x, y)) ile grid üzerinde yoğunluk hesapla
-            for class_name, count in avg_counts.items():
-                if count >= threshold:
-                    # Burada her nesnenin (x, y) koordinatları verilmiş olmalı
-                    # Örnek olarak rastgele x, y değerleri atıyoruz
-                    x, y = np.random.randint(0, grid_size), np.random.randint(0, grid_size)
-                    grid[x, y] += math.ceil(count)  # Yoğunluğu grid'e ekle
-
-            # Isı haritasını çiz
-            plt.figure(figsize=(6, 6))
-            plt.imshow(grid, cmap='hot', interpolation='nearest')
-            plt.colorbar(label='Yoğunluk')
-            plt.title(f"Saniye {second} Isı Haritası")
-            plt.xlabel("X Koordinatı")
-            plt.ylabel("Y Koordinatı")
-
-            # Görseli kaydet
-            plt.savefig(output_path)
-            plt.close()
-            break
