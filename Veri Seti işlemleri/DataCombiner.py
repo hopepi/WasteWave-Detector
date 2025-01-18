@@ -94,7 +94,23 @@ def process_and_create_folders_with_content_edit(root_folder, output_base_folder
                                         print(f"Invalid label format in line: {line}")
                                         continue
                                     if label == 0:
+                                        parts[0] = '3'
+                                    elif label == 1:
+                                        parts[0] = '4'
+                                    elif label == 2:
+                                        parts[0] = '5'
+                                    elif label == 3:
+                                        parts[0] = '7'
+                                    elif label == 4:
+                                        parts[0] = '9'
+                                    elif label == 5:
+                                        parts[0] = '6'
+                                    elif label == 6:
                                         parts[0] = '2'
+                                    elif label == 8:
+                                        parts[0] = '0'
+                                    elif label == 9:
+                                        parts[0] = '1'
                                     else:
                                         continue
 
@@ -117,8 +133,8 @@ def process_and_create_folders_with_content_edit(root_folder, output_base_folder
                     print(f"Completed: {folder}\n{'=' * 40}")
 
 # Kullanım
-root_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Veri setleri\Latas.v394i.yolov8"  # Giriş klasörü
-output_base_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Veri setleri\yeni_set8"  # Çıkış klasörü
+root_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Veri setleri\video fotograf ayiklama.v1i.yolov11"  # Giriş klasörü
+output_base_folder = r"C:\Users\umutk\OneDrive\Masaüstü\Veri setleri\yeni_set10"  # Çıkış klasörü
 
 process_and_create_folders_with_content_edit(root_folder, output_base_folder)
 print("All folders processed!")

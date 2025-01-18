@@ -33,6 +33,7 @@ def rename_paired_files(root_folder, output_base_folder):
         if ext.lower() == '.txt' and name in paired_files:  #Sadece `.txt` uzantılı dosyaları alıyoruz
             paired_files[name]['label'] = (filename, ext)  #Etiket dosyaslarını alıp ekledik
 
+
     # Eşleşmiş dosyaları işleyip yeni benzersiz isimlerle kopyalıyoruz
     for original_name, files in paired_files.items():
         if 'image' in files and 'label' in files:  #Hem resim hem de etiketi eşleşmiş dosyalar için işler
@@ -58,10 +59,10 @@ def rename_paired_files(root_folder, output_base_folder):
                     os.path.join(labels_dir, label_filename),
                     new_label_path
                 )
-                print(f"Successfully processed pair: {original_name} -> {new_name}")
+                print(f"Başarıyla işlendi: {original_name} -> {new_name}")
             except Exception as e:
                 #Hata durumunda mesaj yazdırsın
-                print(f"Error processing {original_name}: {str(e)}")
+                print(f"Hatalı işlem {original_name}: {str(e)}")
 
     return True
 

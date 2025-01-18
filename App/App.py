@@ -103,4 +103,13 @@ summary_button.pack(pady=10)
 exit_button = tk.Button(root, text="Çıkış", command=root.quit, font=("Helvetica", 14), width=20, bg="red", fg="white")
 exit_button.pack(pady=20)
 
+github_label_1 = tk.Label(root, text="https://github.com/hopepi", font=("Helvetica", 10))
+github_label_1.pack(pady=5)
+
+github_label_2 = tk.Label(root, text="https://github.com/EfeCyber", font=("Helvetica", 10))
+github_label_2.pack(pady=5)
+
+github_label_3 = tk.Label(root, text="https://github.com/enesscakirr", font=("Helvetica", 10))
+github_label_3.pack(pady=5)
+
 root.mainloop()
